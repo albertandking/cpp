@@ -46,10 +46,11 @@ cmake ..
 cmake --build .
 ```
 
-在 powershell 中建议用如下命令
+在 powershell 中建议用如下命令，此处需要设置 `-DCMAKE_TOOLCHAIN_FILE=C:/Users/albert/.clion-vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake` 来确保使用到该工具链
+会找不到 boost 库，因为 boost 库是通过 vcpkg 安装的
 
 ```powershell
-mkdir build; cd build; cmake ..; cmake --build .
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=C:/Users/albert/.clion-vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake; cmake --build build
 ```
 
 ## 测试
@@ -58,4 +59,13 @@ mkdir build; cd build; cmake ..; cmake --build .
 
 ## 注意事项
 
-注意 Python 版本
+注意 Python 版本，我们可以在根目录的 CMakeLists.txt 文件中通过修改 conda 创建的虚拟环境的名字，而设设置不同的版本
+
+## Python 格式化
+
+```shell
+pip install -r requirements-dev.txt
+
+配置：https://pre-commit.com/ 设置好 .pre-commit-config.yaml 文件后
+pre-commit install
+```
