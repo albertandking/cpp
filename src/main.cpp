@@ -3,14 +3,30 @@
 #include <cassert>
 #include <chrono>
 #include <codecvt>
-#include <fstream>
 #include <iostream>
 #include <locale>
 #include <ta_common.h>
 #include <ta_func.h>
-#include <vector>
+#include <fstream>
+#include <json/json.h>
 
 using namespace std;
+
+int read() {
+  ifstream ifs("C:/Users/albert/CLionProjects/cpp/src/alice.json");
+  Json::Reader reader;
+  Json::Value obj;
+  reader.parse(ifs, obj); // reader can also read strings
+  cout << "Book: " << obj["book"].asString() << endl;
+  cout << "Year: " << obj["year"].asUInt() << endl;
+  const Json::Value& characters = obj["characters"]; // array of characters
+  for (int i = 0; i < characters.size(); i++){
+    cout << "    name: " << characters[i]["name"].asString();
+    cout << " chapter: " << characters[i]["chapter"].asUInt();
+    cout << endl;
+  }
+  return 0;
+}
 
 /**
  * @brief 测试TA-LIB
@@ -69,6 +85,7 @@ int ta() {
 
 int main() {
   // 为了显示中文全角字符
+  read();
   ta();
   std::string fullwidth_chinese_text = u8"我终于计算完啦：";
 

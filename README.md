@@ -24,6 +24,7 @@ Windows 11 的 64 位环境中来进行构建，需要依靠 Visual Studio 2022 
 - boost
 - rapidjson
 - pybind11
+- talib
 - ...
 
 等库，主要实现了将 quantlib 和 boost 打包进入 `.pyd` 文件中，从而可以让 Python 来进行调用，为之后 Python 程序的性能提示做准备。
