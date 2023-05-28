@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.25)
 # 设置项目名称
 project(cpp VERSION 1.0 LANGUAGES CXX)
 
-# 设置 C++ 标准
+# 设置 C++ 标准，此处主要使用 CPP11 标准
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
