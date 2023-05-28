@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.25)
 project(cpp VERSION 1.0)
 
 # 设置 C++ 标准
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 foreach (CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
@@ -13,6 +13,14 @@ foreach (CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/lib)  # 设置当前配置类型的库文件（共享库和静态库）输出目录。
     # set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/packages)
 endforeach ()
+
+#set(CMAKE_PREFIX_PATH "C:/Users/albert/Desktop/workhome/ta-lib")
+#find_package(TA-Lib REQUIRED)
+
+set(TA-Lib_INCLUDE_DIRS "C:/Users/albert/CLionProjects/cpp/include/ta-lib")
+set(TA-Lib_LIBRARIES "C:/Users/albert/CLionProjects/cpp/lib/ta-lib")  # 要具体到 ta_libc_cdr.lib 库
+message(STATUS "TA-Lib_INCLUDE_DIRS: ${TA-Lib_INCLUDE_DIRS}")
+message(STATUS "TA-Lib_LIBRARIES: ${TA-Lib_LIBRARIES}")
 
 # 设置 vcpkg 的头文件查找路径，如在 CLion 的 CMake 的环境变量中配置了，则不需要；而在 Powershell 运行则需要新增该环境变量，因为有时候会读取不到这句（当 CMake 缓存生成时）
 #set(CMAKE_TOOLCHAIN_FILE "C:/Users/albert/.clion-vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake")
@@ -54,6 +62,6 @@ add_subdirectory(src/option)
 # 添加并生成一个可执行程序
 add_executable(${PROJECT_NAME} src/main.cpp src/version.h)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${QUANTLIB_INCLUDE_DIR} ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/src/option)
+target_include_directories(${PROJECT_NAME} PUBLIC ${TA-Lib_INCLUDE_DIRS} ${QUANTLIB_INCLUDE_DIR} ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/src/option)
 # 指定要链接的动态库
-target_link_libraries(${PROJECT_NAME} PUBLIC ${QUANTLIB_LIBRARY} Boost::headers pybind11::lto pybind11::embed pybind11::module pybind11::headers option)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${TA-Lib_LIBRARIES}/ta_libc_cdr.lib ${QUANTLIB_LIBRARY} Boost::headers pybind11::lto pybind11::embed pybind11::module pybind11::headers option)
