@@ -1,12 +1,14 @@
+# CMake 最低版本号要求
 cmake_minimum_required(VERSION 3.25)
 
 # 设置项目名称
-project(cpp VERSION 1.0)
+project(cpp VERSION 1.0 LANGUAGES CXX)
 
-# 设置 C++ 标准
-set(CMAKE_CXX_STANDARD 17)
+# 设置 C++ 标准，此处主要使用 CPP11 标准
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# 设置输出目录
 foreach (CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${CONFIG_TYPE} CONFIG_TYPE_UPPER)  # 将当前正在处理的配置类型（${CONFIG_TYPE}）转换为大写字符串（${CONFIG_TYPE_UPPER}）
     # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/packages)
@@ -14,9 +16,10 @@ foreach (CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
     # set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} ${CMAKE_SOURCE_DIR}/packages)
 endforeach ()
 
-#set(CMAKE_PREFIX_PATH "C:/Users/albert/Desktop/workhome/ta-lib")
-#find_package(TA-Lib REQUIRED)
+# 设置 jsoncpp 的头文件及库文件的路径
+find_package(jsoncpp CONFIG REQUIRED)
 
+# 设置 TA-Lib 的头文件及库文件的路径
 set(TA-Lib_INCLUDE_DIRS "C:/Users/albert/CLionProjects/cpp/include/ta-lib")
 set(TA-Lib_LIBRARIES "C:/Users/albert/CLionProjects/cpp/lib/ta-lib")  # 要具体到 ta_libc_cdr.lib 库
 message(STATUS "TA-Lib_INCLUDE_DIRS: ${TA-Lib_INCLUDE_DIRS}")
@@ -25,6 +28,7 @@ message(STATUS "TA-Lib_LIBRARIES: ${TA-Lib_LIBRARIES}")
 # 设置 vcpkg 的头文件查找路径，如在 CLion 的 CMake 的环境变量中配置了，则不需要；而在 Powershell 运行则需要新增该环境变量，因为有时候会读取不到这句（当 CMake 缓存生成时）
 #set(CMAKE_TOOLCHAIN_FILE "C:/Users/albert/.clion-vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
+# 设置 Boost 的头文件及库文件的路径
 find_package(Boost REQUIRED)
 message(STATUS "Boost_FOUND: ${Boost_FOUND}")
 message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
@@ -64,4 +68,4 @@ add_executable(${PROJECT_NAME} src/main.cpp src/version.h)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${TA-Lib_INCLUDE_DIRS} ${QUANTLIB_INCLUDE_DIR} ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/src/option)
 # 指定要链接的动态库
-target_link_libraries(${PROJECT_NAME} PUBLIC ${TA-Lib_LIBRARIES}/ta_libc_cdr.lib ${QUANTLIB_LIBRARY} Boost::headers pybind11::lto pybind11::embed pybind11::module pybind11::headers option)
+target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp_lib ${TA-Lib_LIBRARIES}/ta_libc_cdr.lib ${QUANTLIB_LIBRARY} Boost::headers pybind11::lto pybind11::embed pybind11::module pybind11::headers option)
