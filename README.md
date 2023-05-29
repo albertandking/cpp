@@ -6,8 +6,9 @@ P.S. 本项目还处于玩具阶段，仅供参考！
 
 ## 项目
 
-项目在 Windows 11 64 位操作系统中构建，需要安装 Visual Studio 2022 社区版，同时也使用 CLion 作为 IDE，
-目前已经可以构建出用于特定版本，此处主要支持 Python 3.11.3 版本来构建。当然我们通过修改相关代码，也可以适配不同版本的 Pyhton
+项目在 Windows-11 64 位操作系统中构建，需要安装 Visual Studio 2022 社区版，同时也使用 CLion 作为 IDE，
+目前已经可以构建出用于特定版本，此处主要支持 Python 3.11.3 版本来构建。当然我们通过修改相关代码，也可以适配不同版本的 Python，
+我们在本项目中可以通过 pybind11 用 Python 调用 CPP 程序，也用 CPP 调用 Python 程序，当然需要配置好本地 Python 及环境变量（需要用的虚拟环境的路径即可）
 
 ## 性能
 
@@ -17,10 +18,10 @@ P.S. 本项目还处于玩具阶段，仅供参考！
 
 ## 环境配置
 
-Windows 11 的 64 位环境中来进行构建，需要依靠 Visual Studio 2022 和 CLion 最新版，在 CLion 中集成 vcpkg 可以方便的构建项目
+Windows-11 的 64 位环境中来进行构建，需要依靠 Visual Studio 2022 和 CLion 最新版，在 CLion 中集成 vcpkg 可以方便的构建项目
 主要依赖的库为：
 
-- quanblib
+- quantlib
 - boost
 - rapidjson
 - pybind11

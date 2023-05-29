@@ -42,3 +42,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ta
 由于 Python 安装，需要预先编译 `ta-lib-0.4.0-msvc.zip` 到 c 盘目录下，因为 talib 这个 Python 库在安装时，会自动寻找
 c 盘下面的 `ta-lib`，例如：`c:/ta-lib`，所以我们必须要在这个目录编译出来后，才可以在系统进行安装。
 
+### 在 CPP 中嵌入 Python 代码
+
+在 windows 中需要注意需要在本地安装好 Python 且需要设置 Python 的环境变量，否则会报错，具体的错误信息如下：
+
+```cmd
+找不到 pythonxx.dll
+```
+
+想在本地打开 `.exe` 文件，则需要在计算机全局配置
+想在 Run 中打开，则需要在 Run/Debugger 配置中将环境变量放到 Path 路径中

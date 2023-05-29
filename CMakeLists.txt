@@ -8,6 +8,9 @@ project(cpp VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(ENV{PATH} "C:/Users/albert/.conda/envs/pb;$ENV{PATH}")
+message(STATUS "PATH: $ENV{PATH}")
+
 # 设置输出目录
 foreach (CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${CONFIG_TYPE} CONFIG_TYPE_UPPER)  # 将当前正在处理的配置类型（${CONFIG_TYPE}）转换为大写字符串（${CONFIG_TYPE_UPPER}）
@@ -40,6 +43,8 @@ message(STATUS "Python_FOUND: ${Python_FOUND}")
 message(STATUS "Python_EXECUTABLE: ${Python_EXECUTABLE}")
 message(STATUS "Python_INCLUDE_DIRS: ${Python_INCLUDE_DIRS}")
 message(STATUS "Python_LIBRARIES: ${Python_LIBRARIES}")
+#link_directories(${Python_LIBRARIES})
+#link_libraries(${Python_EXECUTABLE}")
 
 # 指定 Quantlib 的头文件及库文件的路径
 include_directories(${Boost_INCLUDE_DIRS})  # 由于 QuantLib 需要依赖 Boost，所以此处直接包含 boost 的目录
