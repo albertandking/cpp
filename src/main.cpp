@@ -3,14 +3,25 @@
 #include <cassert>
 #include <chrono>
 #include <codecvt>
+#include <fstream>
 #include <iostream>
+#include <json/json.h>
 #include <locale>
+#include <pybind11/embed.h>
 #include <ta_common.h>
 #include <ta_func.h>
-#include <fstream>
-#include <json/json.h>
+namespace py = pybind11;
 
 using namespace std;
+
+
+
+int cppcallpy() {
+  py::scoped_interpreter guard{}; // start the interpreter and keep it alive
+
+  py::print("Hello, World!"); // use the Python API
+  return 0;
+}
 
 int read() {
   ifstream ifs("C:/Users/albert/CLionProjects/cpp/src/alice.json");
@@ -19,8 +30,8 @@ int read() {
   reader.parse(ifs, obj); // reader can also read strings
   cout << "Book: " << obj["book"].asString() << endl;
   cout << "Year: " << obj["year"].asUInt() << endl;
-  const Json::Value& characters = obj["characters"]; // array of characters
-  for (int i = 0; i < characters.size(); i++){
+  const Json::Value &characters = obj["characters"]; // array of characters
+  for (int i = 0; i < characters.size(); i++) {
     cout << "    name: " << characters[i]["name"].asString();
     cout << " chapter: " << characters[i]["chapter"].asUInt();
     cout << endl;
@@ -79,12 +90,12 @@ int ta() {
 
   retcode2 = TA_Shutdown();
   assert(retcode2 == TA_SUCCESS);
-  system("pause");
   return 0;
 }
 
 int main() {
   // 为了显示中文全角字符
+  cppcallpy();
   read();
   ta();
   std::string fullwidth_chinese_text = u8"我终于计算完啦：";
