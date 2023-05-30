@@ -2,19 +2,63 @@
 #include "version.h"
 #include <cassert>
 #include <chrono>
-#include <codecvt>
 #include <fstream>
 #include <iostream>
 #include <json/json.h>
-#include <locale>
 #include <pybind11/embed.h>
+#include <pybind11/stl.h>
 #include <ta_common.h>
 #include <ta_func.h>
+#include <unordered_map>
+#include <vector>
 namespace py = pybind11;
 
 using namespace std;
 
+int playak() {
+  py::scoped_interpreter guard{}; // 初始化 Python 解释器
 
+  std::cout << "coming" << std::endl;
+  py::module_ akshare = py::module_::import("akshare");
+  py::object version = akshare.attr("__version__");
+  std::cout << "Akshare version: " << py::str(version) << std::endl;
+
+  py::object result = akshare.attr("spot_hist_sge")("Au100g");
+  //    py::object result = akshare.attr("stock_zh_a_hist")("000001");
+
+  auto columns = result.attr("columns").cast<py::list>();
+  auto rows = result.attr("values").cast<py::list>();
+
+  std::vector<std::unordered_map<std::string, py::object>> data;
+
+  for (const auto &row : rows) {
+    auto row_tuple = row.cast<py::tuple>();
+    std::unordered_map<std::string, py::object> row_data;
+
+    for (size_t i = 0; i < columns.size(); ++i) {
+      row_data[columns[i].cast<std::string>()] = row_tuple[i];
+    }
+
+    data.push_back(row_data);
+  }
+
+  // 打印出数据
+  for (const auto &row : data) {
+    for (const auto &column : columns) {
+      auto column_name = column.cast<std::string>();
+      std::cout << column_name << ": " << py::str(row.at(column_name)) << " ";
+    }
+    std::cout << std::endl;
+  }
+
+  std::cout << "-------------------------------------" << std::endl;
+
+  // 取具体的值
+  std::cout << data[1]["date"] << " ";
+  std::cout << data[1]["open"] << " ";
+
+  return 0;
+}
 
 int cppcallpy() {
   py::scoped_interpreter guard{}; // start the interpreter and keep it alive
@@ -95,15 +139,10 @@ int ta() {
 
 int main() {
   // 为了显示中文全角字符
+  playak();
   cppcallpy();
   read();
   ta();
-  std::string fullwidth_chinese_text = u8"我终于计算完啦：";
-
-  // 使用 C++11 的 codecvt_utf8_utf16 类在 UTF-8 和 UTF-16 之间转换字符串
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-  std::wstring wide_fullwidth_chinese_text =
-      converter.from_bytes(fullwidth_chinese_text);
 
   cout << "你好，世界！" << PROJECT_VERSION_MAJOR << "."
        << PROJECT_VERSION_MINOR << "." << PROJECT_VERSION_PATCH << endl;
@@ -114,8 +153,6 @@ int main() {
   auto duration =
       chrono::duration_cast<chrono::milliseconds>(end_time - start_time)
           .count();
-  std::wcout.imbue(std::locale("chs"));
-  std::wcout << wide_fullwidth_chinese_text;
 
   cout << "耗时 " << duration / 1000 << " s" << endl;
 

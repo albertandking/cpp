@@ -25,3 +25,64 @@ int main() {
 ```
 
 以上是一个案例，仅供参考
+
+## CPP 中调用 AKShare
+
+在 CPP 20 中调用 AKShare 来获取数据，根据本文档搭建 pybind 11 环境
+
+```c++
+#include <iostream>
+#include <pybind11/embed.h>
+#include <pybind11/stl.h>
+#include <unordered_map>
+#include <vector>
+
+namespace py = pybind11;
+
+int main() {
+    py::scoped_interpreter guard{};// 初始化 Python 解释器
+
+    std::cout << "coming" << std::endl;
+    py::module_ akshare = py::module_::import("akshare");
+    py::object version = akshare.attr("__version__");
+    std::cout << "Akshare version: " << py::str(version) << std::endl;
+
+    py::object result = akshare.attr("spot_hist_sge")("Au100g");
+    //    py::object result = akshare.attr("stock_zh_a_hist")("000001");
+
+
+    auto columns = result.attr("columns").cast<py::list>();
+    auto rows = result.attr("values").cast<py::list>();
+
+    std::vector<std::unordered_map<std::string, py::object>> data;
+
+    for (const auto &row: rows) {
+        auto row_tuple = row.cast<py::tuple>();
+        std::unordered_map<std::string, py::object> row_data;
+
+        for (size_t i = 0; i < columns.size(); ++i) {
+            row_data[columns[i].cast<std::string>()] = row_tuple[i];
+        }
+
+        data.push_back(row_data);
+    }
+
+    
+    // 打印出数据
+    for (const auto &row: data) {
+        for (const auto &column: columns) {
+            auto column_name = column.cast<std::string>();
+            std::cout << column_name << ": " << py::str(row.at(column_name)) << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "-------------------------------------" << std::endl;
+
+    // 取具体的值
+    std::cout << data[1]["date"] << " ";
+    std::cout << data[1]["open"] << " ";
+
+    return 0;
+}
+```
